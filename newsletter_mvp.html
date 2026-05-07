@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CEPAL Lab — Newsletter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@300;400;600&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ── Brand constants ──────────────────────────────────── */
+    :root {
+      --brand: #036BAA;
+      --brand-hover: #025a8f;
+      --brand-soft: rgba(3, 107, 170, 0.12);
+      --brand-border: rgba(3, 107, 170, 0.25);
+      --radius: 12px;
+    }
+
+    /* ── DARK theme (default — matches site default) ──────── */
+    [data-theme="dark"] {
+      --page-bg: #0e0e0d;
+      --bg: #141413;
+      --surface: rgba(255, 255, 255, 0.05);
+      --surface-2: rgba(255, 255, 255, 0.08);
+      --text: #faf9f5;
+      --text-muted: #b0aea5;
+      --text-soft: rgba(250, 249, 245, 0.55);
+      --border: rgba(250, 249, 245, 0.10);
+      --footer-bg: #0e0e0d;
+      --banner-bg: radial-gradient(900px 520px at 50% 35%, rgba(3, 107, 170, 0.30), transparent 65%), #141413;
+      --banner-text: #faf9f5;
+      --banner-text-muted: rgba(250, 249, 245, 0.72);
+      --banner-text-soft: rgba(250, 249, 245, 0.55);
+      --banner-border: rgba(250, 249, 245, 0.10);
+    }
+
+    /* ── LIGHT theme (matches lab.cepal.org/newsletter viewer) ── */
+    [data-theme="light"] {
+      --page-bg: #ECECEC;
+      --bg: #F4F4F4;
+      --surface: #FFFFFF;
+      --surface-2: #FAFAF8;
+      --text: #1A1A1A;
+      --text-muted: rgba(0, 0, 0, 0.65);
+      --text-soft: rgba(0, 0, 0, 0.50);
+      --border: rgba(0, 0, 0, 0.10);
+      --footer-bg: #ECECEC;
+      --banner-bg: radial-gradient(900px 520px at 50% 30%, rgba(255, 255, 255, 0.10), transparent 60%), linear-gradient(180deg, #036BAA 0%, #025a8f 100%);
+      --banner-text: #ffffff;
+      --banner-text-muted: rgba(255, 255, 255, 0.85);
+      --banner-text-soft: rgba(255, 255, 255, 0.65);
+      --banner-border: rgba(255, 255, 255, 0.18);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--page-bg);
+      font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    a {
+      color: var(--brand);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--brand-hover);
+    }
+
+    /* ── Theme toggle ─────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px;
+      backdrop-filter: blur(8px);
+    }
+
+    .theme-toggle__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle__btn--active {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .theme-toggle__btn:not(.theme-toggle__btn--active):hover {
+      color: var(--text);
+    }
+
+    .theme-toggle__icon {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* ── Wrapper ──────────────────────────────────────────── */
+    .wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--bg);
+      transition: background 0.25s ease;
+    }
+
+    /* ── Banner / Hero (centered, mirrors site hero) ─────── */
+    .banner {
+      padding: 48px 48px 40px;
+      background: var(--banner-bg);
+      color: var(--banner-text);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner__edition {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--banner-text-soft);
+      margin-bottom: 22px;
+    }
+
+    .banner__edition strong {
+      color: var(--banner-text);
+      font-weight: 700;
+    }
+
+    .banner__edition .banner__sep {
+      margin: 0 8px;
+      opacity: 0.55;
+    }
+
+    .banner__logo {
+      height: 54px;
+      width: auto;
+      margin: 0 auto 16px;
+      display: block;
+    }
+
+    .banner__tagline {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.45;
+      letter-spacing: -0.005em;
+      color: var(--banner-text);
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    /* ── Intro ────────────────────────────────────────────── */
+    .intro {
+      padding: 32px 48px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .intro__eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 14px;
+    }
+
+    .intro__eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 1px;
+      background: var(--brand);
+      flex-shrink: 0;
+    }
+
+    .intro p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* ── Sections ─────────────────────────────────────────── */
+    .section {
+      padding: 36px 48px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-of-type {
+      border-bottom: none;
+    }
+
+    .kicker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 14px;
+    }
+
+    .kicker::before {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 1px;
+      background: var(--brand);
+      flex-shrink: 0;
+    }
+
+    .section__image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    /* ── Side-by-side layout (image + text) ───────────────── */
+    .section__split {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .section__split--reverse {
+      grid-template-columns: 1fr 200px;
+    }
+
+    .section__split-image {
+      width: 100%;
+      height: 100%;
+      min-height: 140px;
+      object-fit: contain;
+      object-position: center;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: block;
+    }
+
+    .section__split-body {
+      font-size: 14px;
+      line-height: 1.78;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin: 0;
+      align-self: center;
+    }
+
+    @media (max-width: 520px) {
+      .section__split {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .section__split-image {
+        aspect-ratio: 16 / 9;
+        min-height: 0;
+      }
+    }
+
+    .section__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .section__body {
+      font-size: 14px;
+      line-height: 1.78;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-bottom: 18px;
+    }
+
+    .read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--brand);
+      letter-spacing: 0.01em;
+      transition: gap 0.2s ease;
+    }
+
+    .read-more:hover {
+      gap: 10px;
+      color: var(--brand-hover);
+    }
+
+    .read-more__arrow {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    /* ── Tag ──────────────────────────────────────────────── */
+    .tag {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--brand);
+      background: var(--brand-soft);
+      border: 1px solid var(--brand-border);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    .footer {
+      background: var(--banner-bg);
+      color: var(--banner-text);
+      padding: 36px 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer__brand {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--banner-text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer__desc {
+      font-size: 13px;
+      color: var(--banner-text-muted);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .footer__links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 12px;
+      margin-top: 24px;
+      color: var(--banner-text-soft);
+      border-top: 1px solid var(--banner-border);
+      padding-top: 20px;
+    }
+
+    .footer__links a {
+      color: var(--banner-text-soft);
+      transition: color 0.15s;
+    }
+
+    .footer__links a:hover {
+      color: var(--banner-text);
+    }
+
+    .footer__sep {
+      color: var(--banner-text-soft);
+      opacity: 0.7;
+    }
+
+    .footer__team {
+      margin-top: 0;
+      padding-top: 18px;
+      border-top: 1px dashed var(--banner-border);
+      font-size: 11.5px;
+      line-height: 1.8;
+      color: var(--banner-text-soft);
+    }
+
+    .footer__team strong {
+      color: var(--banner-text);
+      font-weight: 600;
+      margin-right: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .footer__team span.name {
+      color: var(--banner-text-muted);
+      font-weight: 500;
+    }
+
+    .footer__team span.role {
+      font-style: italic;
+    }
+
+    .footer__team-sep {
+      color: var(--banner-text);
+      opacity: 0.6;
+      font-weight: bold;
+      margin: 0 6px;
+    }
+
+    @media (max-width: 600px) {
+
+      .banner,
+      .intro,
+      .section,
+      .footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .banner {
+        padding-top: 36px;
+        padding-bottom: 32px;
+      }
+
+      .banner__logo {
+        height: 46px;
+      }
+
+      .banner__tagline {
+        font-size: 15px;
+      }
+
+      .section__title {
+        font-size: 18px;
+      }
+
+      .theme-toggle {
+        top: 12px;
+        right: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Theme toggle -->
+  <div class="theme-toggle" role="group" aria-label="Tema visual">
+    <button type="button" class="theme-toggle__btn" data-theme-set="light" aria-label="Tema claro">
+      <svg class="theme-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+      </svg>
+      Claro
+    </button>
+    <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-set="dark"
+      aria-label="Tema oscuro">
+      <svg class="theme-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </svg>
+      Oscuro
+    </button>
+  </div>
+
+  <div class="wrapper">
+
+    <!-- Banner -->
+    <header class="banner">
+      <div class="banner__edition">
+        Newsletter <span class="banner__sep">·</span> <strong>N° 1</strong> <span class="banner__sep">·</span> Mayo 2026
+      </div>
+      <img class="banner__logo" src="assets/cepal-lab-logo.png" alt="CEPAL Lab" />
+      <h1 class="banner__tagline">
+        Experimentando soluciones innovadores para abordar los desafíos del presente y del futuro.
+      </h1>
+    </header>
+
+    <!-- Intro -->
+    <div class="intro">
+      <div class="intro__eyebrow">Sobre este newsletter</div>
+      <p>
+        Estrenamos este boletín para mantenerte al tanto de todo lo que sucede en el <span
+          style="font-weight: 500;">CEPAL
+          Lab</span>, el espacio de innovación aplicada de la Comisión Económica para
+        América Latina y el Caribe. Cada edición reúne novedades del laboratorio, experimentos en marcha,
+        recomendaciones de lectura y vigilancia tecnológica sobre herramientas, modelos y frameworks relevantes para la
+        comunidad.
+      </p>
+    </div>
+
+    <!-- Novedades -->
+    <div class="section">
+      <div class="kicker">Novedades</div>
+      <img class="section__image" src="assets/reg_commisions.jpg"
+        alt="Sesión de intercambio entre las comisiones regionales de Naciones Unidas" />
+      <h2 class="section__title">El laboratorio estrecha lazos con equipos de innovación de las démas Comisiones
+        Regionales</h2>
+      <p class="section__body">
+        Con el propósito de compartir aprendizajes, metodologías y experiencias innovadoras, el equipo del laboratorio
+        participó en una sesión de intercambio de conocimiento con la red de las comisiones regionales.
+        En esta instancia, el CEPAL Lab presentó algunos proyectos desarrollados tales como el mapeo estratégico de
+        publicaciones y el análisis de instrumentos de políticas asistido por IA, caso aplicado a los planes
+        estratégicos institucionales de la República Dominicana.<br>
+
+        En esta actividad de intercambio de conocimiento promovida por ESCAP se conocieron diversas iniciativas tanto de
+        gestión de la innovación como herramientas practicas que permiten el aprovechamiento de las nuevas tecnologías
+        para el fortalecimiento de capacidades institucionales. Se espera que esta instancia sea un proceso de
+        intercambio contínuo en el cual experiencias, soluciones, desafíos o aplicaciones desarrolladas puedan ser
+        aprovechadas por las distintas comisiones, adaptándolas a sus respectivos contextos regionales.
+      </p>
+      <a href="https://lab.cepal.org/notas/lab-outreach" class="read-more">Leer más <span
+          class="read-more__arrow">→</span></a>
+    </div>
+
+    <!-- Experimentación destacada -->
+    <div class="section">
+      <div class="kicker">Experimentación Destacada</div>
+      <img class="section__image" src="iceberg_animated.gif" alt="Animación del Iceberg de Publicaciones"
+        style="border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+      <h2 class="section__title">Impacto de publicaciones: Análisis de su aprovechamiento y uso</h2>
+      <p class="section__body">
+        Utilizando datos de descargas del repositorio institucional de CEPAL, entre 2024 y 2025, y otras fuentes
+        externas, el laboratorio realizó un análisis exploratorio del consumo de nuestro catálogo, revelando la
+        estructura de descargas, la resonancia en medios y las citaciones académicas. Los resultados revelan
+        interesantes hallazgos entre los que destacan un importante volumen de descargas en escalas comparables a
+        organismos
+        internacionales de alcance global, una elevada concentración de consultas en un pequeño grupo de publicaciones,
+        y una
+        importante demanda de documentos publicados antes de 2015. Los hallazgos preliminares también dan cuenta de
+        un marcado interés en temas macroeconómicos, documentos de diagnóstico y material de referencia técnica.
+        <br />
+        El ejercicio sirvió también para identificar potenciales sinergias entre distintas áreas de la Comisión para
+        potenciar el aprovechamiento de la producción institucional. Además reveló la importancia de que este tipo de
+        análisis se realice de manera periódica y sistemática, para lo cual se recomienda un sistema de monitoreo
+        continuo integrado al mapeo estratégico de publicaciones.
+        En el siguiente enlace puedes explorar la presentación y el prototipo de un dashboard interactivo que brinda
+        mayor información
+        sobre el 1% de las publicaciones más descargadas.
+      </p>
+
+
+
+      <a href="https://pubs-impact-03.netlify.app/" class="read-more">Explorar Presentación <span
+          class="read-more__arrow">→</span></a>
+    </div>
+
+    <!-- Recomendados -->
+    <div class="section">
+      <div class="kicker">Recomendados</div>
+      <h2 class="section__title">Smarter, Smaller, Stronger: Resource-Efficient Generative AI & the Future of Digital
+        Transformation — UNESCO, 2025</h2>
+      <div class="section__split">
+        <img class="section__split-image" src="assets/unesco.png" alt="UNESCO — Smarter, Smaller, Stronger" />
+        <p class="section__split-body">
+          Las oportunidades que ofrece la IA como potencial catalizador del cambio en múltiples ámbitos del desarrollo
+          pueden verse opacadas por la elevada demanda computacional necesaria para su funcionamiento y la presión que
+          esto ejerce sobre los recursos energéticos e hídricos. Los modelos pequeños, abiertos y eficientes podrían
+          ser una alternativa para abordar estos desafíos. En este documento, la UNESCO explora a través de casos
+          prácticos como estos modelos pueden contribuir a democratizar el acceso a capacidades avanzadas y hacerse
+          cargo a la vez de los riesgos ambientales asociados a su desarrollo y uso.
+        </p>
+      </div>
+      <a href="https://unesdoc.unesco.org/ark:/48223/pf0000394521?posInSet=1&queryId=4834e359-4ae7-48ee-8c36-2949b12a44a7"
+        class="read-more">Ver documento <span class="read-more__arrow">→</span></a>
+    </div>
+
+    <!-- Vigilancia tecnológica -->
+    <div class="section">
+      <!--<span class="tag">Tech Watch</span> -->
+      <div class="kicker">Vigilancia Tecnológica</div>
+      <h2 class="section__title">LLMs con razonamiento extendido: lo que cambia en la práctica</h2>
+      <div class="section__split section__split--reverse">
+        <p class="section__split-body">
+          Los modelos de última generación con capacidades de razonamiento encadenado (chain-of-thought extendido)
+          están redefiniendo los casos de uso para análisis de documentos complejos y síntesis de información.
+          Revisamos qué implica esto para flujos de extracción de conocimiento desde fuentes no estructuradas — un
+          área central del trabajo del laboratorio en 2026 — y cómo esta técnica fue clave para clasificar el corpus
+          de la CEPAL bajo las 11 grandes transformaciones.
+        </p>
+        <img class="section__split-image" src="assets/chain_of_thought_icon.png"
+          alt="Ilustración 3D: Chain of Thought, razonamiento encadenado" />
+      </div>
+      <a href="https://lab.cepal.org/notas/pensar-en-voz-alta" class="read-more">Leer análisis <span
+          class="read-more__arrow">→</span></a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer__brand">
+        <img src="../Branding/cepal-lab-logo.png" alt="CEPAL Lab" style="height: 20px; width: auto;" />
+        Sobre el laboratorio
+      </div>
+      <div class="footer__desc">
+        El CEPAL Lab es una iniciativa liderada desde la Oficina de la Secretaría Adjunta que busca explorar y
+        aprovechar el potencial de las nuevas tecnologías y enfoques basados en datos para fortalecer nuestras
+        capacidades institucionales y apoyar el mandato histórico de la CEPAL. A través de un equipo multidisciplinario
+        buscamos servir de intersección entre las áreas sustantivas y de apoyo de la Comisión y los avances
+        tecnológicos para facilitar la incorporación de herramientas y metodologías que aporten valor agregado a la
+        gestión del conocimiento institucional.
+      </div>
+      <div class="footer__team">
+        <strong>Equipo:</strong>
+        <span class="name">Alejandro Bustamante</span>, <span class="role">Coordinador</span> <span class="footer__team-sep">·</span>
+        <span class="name">María Paz Collinao</span>, <span class="role">Experta en Gestión Institucional</span> <span class="footer__team-sep">·</span>
+        <span class="name">Andrés Yañez</span>, <span class="role">Experto en Infraestructura Tecnológica</span> <span class="footer__team-sep">·</span>
+        <span class="name">Temitope Farotimi</span>, <span class="role">Líder de Estrategia y Difusión</span> <span class="footer__team-sep">·</span>
+        <span class="name">Mario Dinamarca</span>, <span class="role">Consultor en ciencia de datos e IA</span>.
+      </div>
+      <div class="footer__links">
+        <a href="https://lab.cepal.org/">Visitar el laboratorio</a>
+        <span class="footer__sep">·</span>
+        <a href="#">Contacto</a>
+        <span class="footer__sep">·</span>
+        <a href="#">Cancelar suscripción</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btns = document.querySelectorAll('[data-theme-set]');
+
+      function setTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        btns.forEach(function (b) {
+          b.classList.toggle('theme-toggle__btn--active', b.dataset.themeSet === theme);
+        });
+        try { localStorage.setItem('cepallab-newsletter-theme', theme); } catch (e) { }
+      }
+
+      var saved = null;
+      try { saved = localStorage.getItem('cepallab-newsletter-theme'); } catch (e) { }
+      if (saved === 'light' || saved === 'dark') setTheme(saved);
+
+      btns.forEach(function (b) {
+        b.addEventListener('click', function () { setTheme(b.dataset.themeSet); });
+      });
+    })();
+  </script>
+
+</body>
+
+</html>
